@@ -3,3 +3,4 @@
     <cache-path name="pick_photo_cache" path="pick_photo/" />
     <cache-path name="pick_photo_camera" path="pick_photo_camera/" />
 </paths>
+

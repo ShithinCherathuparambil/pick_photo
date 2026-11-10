@@ -28,11 +28,13 @@ void main() {
     test('throws InvalidOptionsException when maxWidth <= 0', () {
       expect(
         () => ImagePickOptions(maxWidth: 0),
-        throwsA(isA<InvalidOptionsException>().having(
-          (e) => e.message,
-          'message',
-          contains('maxWidth'),
-        )),
+        throwsA(
+          isA<InvalidOptionsException>().having(
+            (e) => e.message,
+            'message',
+            contains('maxWidth'),
+          ),
+        ),
       );
       expect(
         () => ImagePickOptions(maxWidth: -10),
@@ -43,11 +45,13 @@ void main() {
     test('throws InvalidOptionsException when maxHeight <= 0', () {
       expect(
         () => ImagePickOptions(maxHeight: 0),
-        throwsA(isA<InvalidOptionsException>().having(
-          (e) => e.message,
-          'message',
-          contains('maxHeight'),
-        )),
+        throwsA(
+          isA<InvalidOptionsException>().having(
+            (e) => e.message,
+            'message',
+            contains('maxHeight'),
+          ),
+        ),
       );
       expect(
         () => ImagePickOptions(maxHeight: -5),
@@ -58,11 +62,13 @@ void main() {
     test('throws InvalidOptionsException when maxSizeBytes <= 0', () {
       expect(
         () => ImagePickOptions(maxSizeBytes: 0),
-        throwsA(isA<InvalidOptionsException>().having(
-          (e) => e.message,
-          'message',
-          contains('maxSizeBytes'),
-        )),
+        throwsA(
+          isA<InvalidOptionsException>().having(
+            (e) => e.message,
+            'message',
+            contains('maxSizeBytes'),
+          ),
+        ),
       );
       expect(
         () => ImagePickOptions(maxSizeBytes: -1),
@@ -73,11 +79,13 @@ void main() {
     test('throws InvalidOptionsException when quality is outside 1..100', () {
       expect(
         () => ImagePickOptions(quality: 0),
-        throwsA(isA<InvalidOptionsException>().having(
-          (e) => e.message,
-          'message',
-          contains('quality'),
-        )),
+        throwsA(
+          isA<InvalidOptionsException>().having(
+            (e) => e.message,
+            'message',
+            contains('quality'),
+          ),
+        ),
       );
       expect(
         () => ImagePickOptions(quality: 101),

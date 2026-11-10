@@ -57,26 +57,29 @@ void main() {
       expect(bytes, equals([1, 2, 3, 4, 5]));
     });
 
-    test('saveTo copies file to persistent destination creating parent dirs', () async {
-      final sampleFile = File('${tempDir.path}/source.jpg');
-      await sampleFile.writeAsString('fake image data');
+    test(
+      'saveTo copies file to persistent destination creating parent dirs',
+      () async {
+        final sampleFile = File('${tempDir.path}/source.jpg');
+        await sampleFile.writeAsString('fake image data');
 
-      final image = PickedImage(
-        path: sampleFile.path,
-        name: 'source.jpg',
-        mimeType: 'image/jpeg',
-        extension: 'jpg',
-        sizeBytes: 15,
-        source: ImageSource.gallery,
-      );
+        final image = PickedImage(
+          path: sampleFile.path,
+          name: 'source.jpg',
+          mimeType: 'image/jpeg',
+          extension: 'jpg',
+          sizeBytes: 15,
+          source: ImageSource.gallery,
+        );
 
-      final destPath = '${tempDir.path}/nested/folder/destination.jpg';
-      final savedFile = await image.saveTo(destPath);
+        final destPath = '${tempDir.path}/nested/folder/destination.jpg';
+        final savedFile = await image.saveTo(destPath);
 
-      expect(savedFile.existsSync(), isTrue);
-      expect(savedFile.path, destPath);
-      expect(await savedFile.readAsString(), 'fake image data');
-    });
+        expect(savedFile.existsSync(), isTrue);
+        expect(savedFile.path, destPath);
+        expect(await savedFile.readAsString(), 'fake image data');
+      },
+    );
 
     test('equality and hashCode work as expected', () {
       const img1 = PickedImage(

@@ -33,7 +33,7 @@ public class PickPhotoPlugin: NSObject, FlutterPlugin, PickPhotoHostApi, PHPicke
 
     // MARK: - PickPhotoHostApi
 
-    public func pickImage(options: ImagePickOptionsDto) async throws -> PickedImageResult? {
+    func pickImage(options: ImagePickOptionsDto) async throws -> PickedImageResult? {
         try acquireLock()
         currentSingleOptions = options
 
@@ -65,7 +65,7 @@ public class PickPhotoPlugin: NSObject, FlutterPlugin, PickPhotoHostApi, PHPicke
         }
     }
 
-    public func pickMultipleImages(options: MultiImagePickOptionsDto) async throws -> [PickedImageResult] {
+    func pickMultipleImages(options: MultiImagePickOptionsDto) async throws -> [PickedImageResult] {
         try acquireLock()
         currentMultiOptions = options
 
@@ -105,7 +105,7 @@ public class PickPhotoPlugin: NSObject, FlutterPlugin, PickPhotoHostApi, PHPicke
         }
     }
 
-    public func captureImage(options: CameraPickOptionsDto) async throws -> PickedImageResult? {
+    func captureImage(options: CameraPickOptionsDto) async throws -> PickedImageResult? {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
             throw PigeonError(code: "camera_unavailable", message: "Camera is not available on this device", details: nil)
         }
@@ -150,7 +150,7 @@ public class PickPhotoPlugin: NSObject, FlutterPlugin, PickPhotoHostApi, PHPicke
         }
     }
 
-    public func clearCache() async throws {
+    func clearCache() async throws {
         let fileManager = FileManager.default
         let cacheDir = getCacheDirectory()
 

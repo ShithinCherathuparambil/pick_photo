@@ -29,3 +29,4 @@ Please be respectful and constructive in all communication and issue discussions
 - Write clear, concise commit messages following Conventional Commits (e.g. `feat:`, `fix:`, `docs:`, `test:`).
 - Verify that tests pass and formatting is clean (`dart format .`).
 - Keep diffs focused and minimal.
+

@@ -5,9 +5,7 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/platform/messages.g.dart',
     dartOptions: DartOptions(),
     kotlinOut: 'android/src/main/kotlin/com/example/pick_photo/Messages.g.kt',
-    kotlinOptions: KotlinOptions(
-      package: 'com.example.pick_photo',
-    ),
+    kotlinOptions: KotlinOptions(package: 'com.example.pick_photo'),
     swiftOut: 'ios/pick_photo/Sources/pick_photo/Messages.g.swift',
     swiftOptions: SwiftOptions(),
     copyrightHeader: 'pigeons/copyright.txt',

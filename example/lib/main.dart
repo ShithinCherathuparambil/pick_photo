@@ -202,9 +202,9 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
         _images.clear();
         _statusMessage = 'Cache cleared successfully.';
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Temporary cache cleared.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Temporary cache cleared.')));
     } on PickPhotoException catch (e) {
       if (!mounted) return;
       setState(() {
@@ -222,24 +222,21 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
   Future<void> _saveImage(PickedImage image) async {
     try {
       final tempDir = Directory.systemTemp;
-      final savedPath = '${tempDir.path}/saved_${DateTime.now().millisecondsSinceEpoch}_${image.name}';
+      final savedPath =
+          '${tempDir.path}/saved_${DateTime.now().millisecondsSinceEpoch}_${image.name}';
       final savedFile = await image.saveTo(savedPath);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Saved to: ${savedFile.path}'),
-          action: SnackBarAction(
-            label: 'OK',
-            onPressed: () {},
-          ),
+          action: SnackBarAction(label: 'OK', onPressed: () {}),
         ),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to save: $e')));
     }
   }
 
@@ -248,13 +245,16 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
       final bytes = await image.readAsBytes();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Read ${bytes.lengthInBytes} bytes from file successfully.')),
+        SnackBar(
+          content: Text(
+            'Read ${bytes.lengthInBytes} bytes from file successfully.',
+          ),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to read bytes: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to read bytes: $e')));
     }
   }
 
@@ -321,7 +321,9 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Preserve Original Format'),
-                  subtitle: const Text('Keep original HEIC, GIF, PNG & EXIF metadata without re-encoding.'),
+                  subtitle: const Text(
+                    'Keep original HEIC, GIF, PNG & EXIF metadata without re-encoding.',
+                  ),
                   value: _preserveOriginal,
                   onChanged: (val) => setState(() => _preserveOriginal = val),
                 ),
@@ -329,7 +331,9 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                   const Divider(),
                   Text(
                     'Quality: ${_quality.round()}%',
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Slider(
                     value: _quality,
@@ -342,9 +346,12 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: const Text('Constrain Max Dimensions'),
-                    subtitle: const Text('Resize while preserving aspect ratio'),
+                    subtitle: const Text(
+                      'Resize while preserving aspect ratio',
+                    ),
                     value: _applyDimensionConstraints,
-                    onChanged: (v) => setState(() => _applyDimensionConstraints = v),
+                    onChanged: (v) =>
+                        setState(() => _applyDimensionConstraints = v),
                   ),
                   if (_applyDimensionConstraints) ...[
                     Row(
@@ -374,7 +381,8 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                                 min: 200,
                                 max: 4000,
                                 divisions: 38,
-                                onChanged: (v) => setState(() => _maxHeight = v),
+                                onChanged: (v) =>
+                                    setState(() => _maxHeight = v),
                               ),
                             ],
                           ),
@@ -406,9 +414,18 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                       value: _maxSizeBytes,
                       items: const [
                         DropdownMenuItem(value: null, child: Text('None')),
-                        DropdownMenuItem(value: 1024 * 1024, child: Text('1 MB')),
-                        DropdownMenuItem(value: 5 * 1024 * 1024, child: Text('5 MB')),
-                        DropdownMenuItem(value: 10 * 1024 * 1024, child: Text('10 MB')),
+                        DropdownMenuItem(
+                          value: 1024 * 1024,
+                          child: Text('1 MB'),
+                        ),
+                        DropdownMenuItem(
+                          value: 5 * 1024 * 1024,
+                          child: Text('5 MB'),
+                        ),
+                        DropdownMenuItem(
+                          value: 10 * 1024 * 1024,
+                          child: Text('10 MB'),
+                        ),
                       ],
                       onChanged: (v) => setState(() => _maxSizeBytes = v),
                     ),
@@ -468,13 +485,14 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            Icon(Icons.info_outline, size: 20, color: theme.colorScheme.primary),
+            Icon(
+              Icons.info_outline,
+              size: 20,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                _statusMessage!,
-                style: theme.textTheme.bodyMedium,
-              ),
+              child: Text(_statusMessage!, style: theme.textTheme.bodyMedium),
             ),
           ],
         ),
@@ -489,7 +507,11 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            Icon(Icons.error_outline, size: 20, color: theme.colorScheme.onErrorContainer),
+            Icon(
+              Icons.error_outline,
+              size: 20,
+              color: theme.colorScheme.onErrorContainer,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -512,7 +534,9 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
       children: [
         Text(
           'Picked Images (${_images.length})',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         if (_images.isNotEmpty)
           TextButton(
@@ -530,16 +554,24 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
           padding: const EdgeInsets.symmetric(vertical: 48),
           child: Column(
             children: [
-              Icon(Icons.image_search, size: 64, color: theme.colorScheme.outline),
+              Icon(
+                Icons.image_search,
+                size: 64,
+                color: theme.colorScheme.outline,
+              ),
               const SizedBox(height: 16),
               Text(
                 'No images picked yet',
-                style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.outline),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Tap Gallery, Multi-Pick, or Camera above to pick photos.',
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
               ),
             ],
           ),
@@ -575,9 +607,16 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.broken_image, size: 48, color: Colors.grey),
+                      const Icon(
+                        Icons.broken_image,
+                        size: 48,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(height: 8),
-                      Text('Preview unavailable: $error', style: const TextStyle(fontSize: 12)),
+                      Text(
+                        'Preview unavailable: $error',
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                 );
@@ -609,7 +648,10 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                     Chip(
                       label: Text(
                         image.extension.toUpperCase(),
-                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
@@ -622,7 +664,10 @@ class _PickPhotoHomePageState extends State<PickPhotoHomePage> {
                   runSpacing: 4,
                   children: [
                     _buildMetaChip(Icons.aspect_ratio, dimensions),
-                    _buildMetaChip(Icons.data_usage, _formatBytes(image.sizeBytes)),
+                    _buildMetaChip(
+                      Icons.data_usage,
+                      _formatBytes(image.sizeBytes),
+                    ),
                     _buildMetaChip(Icons.category, image.mimeType),
                     _buildMetaChip(Icons.source, image.source.name),
                   ],

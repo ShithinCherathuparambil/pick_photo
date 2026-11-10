@@ -7,7 +7,8 @@ import 'package:pick_photo/src/platform/messages.g.dart';
 
 class FakePickPhotoHostApi extends PickPhotoHostApi {
   FutureOr<PickedImageResult?> Function(ImagePickOptionsDto)? onPickImage;
-  FutureOr<List<PickedImageResult>> Function(MultiImagePickOptionsDto)? onPickMultiple;
+  FutureOr<List<PickedImageResult>> Function(MultiImagePickOptionsDto)?
+  onPickMultiple;
   FutureOr<PickedImageResult?> Function(CameraPickOptionsDto)? onCaptureImage;
   FutureOr<void> Function()? onClearCache;
 
@@ -34,7 +35,9 @@ class FakePickPhotoHostApi extends PickPhotoHostApi {
   }
 
   @override
-  Future<List<PickedImageResult>> pickMultipleImages(MultiImagePickOptionsDto options) async {
+  Future<List<PickedImageResult>> pickMultipleImages(
+    MultiImagePickOptionsDto options,
+  ) async {
     lastMultiOptions = options;
     if (onPickMultiple != null) {
       return await onPickMultiple!(options);
@@ -119,12 +122,15 @@ void main() {
       expect(fakeApi.lastSingleOptions?.preserveOriginal, isFalse);
     });
 
-    test('pick single photo returns null on cancellation without error', () async {
-      fakeApi.onPickImage = (_) => null;
+    test(
+      'pick single photo returns null on cancellation without error',
+      () async {
+        fakeApi.onPickImage = (_) => null;
 
-      final image = await pickPhoto.pickFromGallery();
-      expect(image, isNull);
-    });
+        final image = await pickPhoto.pickFromGallery();
+        expect(image, isNull);
+      },
+    );
 
     test('static PickPhoto.fromGallery delegates to instance', () async {
       final image = await PickPhoto.fromGallery();
@@ -153,28 +159,36 @@ void main() {
       expect(fakeApi.lastMultiOptions?.preserveOriginal, isTrue);
     });
 
-    test('pick multiple returns empty list on cancellation without error', () async {
-      fakeApi.onPickMultiple = (_) => [];
+    test(
+      'pick multiple returns empty list on cancellation without error',
+      () async {
+        fakeApi.onPickMultiple = (_) => [];
 
-      final images = await pickPhoto.pickMultiple();
-      expect(images, isEmpty);
-    });
+        final images = await pickPhoto.pickMultiple();
+        expect(images, isEmpty);
+      },
+    );
 
-    test('pick multiple throws InvalidOptionsException if maxCount <= 0', () async {
-      expect(
-        () => pickPhoto.pickMultiple(maxCount: 0),
-        throwsA(isA<InvalidOptionsException>().having(
-          (e) => e.message,
-          'message',
-          contains('maxCount'),
-        )),
-      );
+    test(
+      'pick multiple throws InvalidOptionsException if maxCount <= 0',
+      () async {
+        expect(
+          () => pickPhoto.pickMultiple(maxCount: 0),
+          throwsA(
+            isA<InvalidOptionsException>().having(
+              (e) => e.message,
+              'message',
+              contains('maxCount'),
+            ),
+          ),
+        );
 
-      expect(
-        () => pickPhoto.pickMultiple(maxCount: -1),
-        throwsA(isA<InvalidOptionsException>()),
-      );
-    });
+        expect(
+          () => pickPhoto.pickMultiple(maxCount: -1),
+          throwsA(isA<InvalidOptionsException>()),
+        );
+      },
+    );
 
     test('static PickPhoto.multiple delegates to instance', () async {
       final images = await PickPhoto.multiple(maxCount: 3);
@@ -220,62 +234,71 @@ void main() {
   });
 
   group('Concurrency and In-flight Guard', () {
-    test('throws PickerBusyException when a simultaneous request is made', () async {
-      final completer = Completer<PickedImageResult?>();
-      fakeApi.onPickImage = (_) => completer.future;
+    test(
+      'throws PickerBusyException when a simultaneous request is made',
+      () async {
+        final completer = Completer<PickedImageResult?>();
+        fakeApi.onPickImage = (_) => completer.future;
 
-      // Start first operation (will not complete immediately)
-      final firstFuture = pickPhoto.pickFromGallery();
-      expect(pickPhoto.isBusy, isTrue);
+        // Start first operation (will not complete immediately)
+        final firstFuture = pickPhoto.pickFromGallery();
+        expect(pickPhoto.isBusy, isTrue);
 
-      // Attempt second operation simultaneously
-      expect(
-        () => pickPhoto.pickFromGallery(),
-        throwsA(isA<PickerBusyException>().having(
-          (e) => e.code,
-          'code',
-          'picker_busy',
-        )),
-      );
+        // Attempt second operation simultaneously
+        expect(
+          () => pickPhoto.pickFromGallery(),
+          throwsA(
+            isA<PickerBusyException>().having(
+              (e) => e.code,
+              'code',
+              'picker_busy',
+            ),
+          ),
+        );
 
-      // Attempt camera simultaneously
-      expect(
-        () => pickPhoto.pickFromCamera(),
-        throwsA(isA<PickerBusyException>()),
-      );
+        // Attempt camera simultaneously
+        expect(
+          () => pickPhoto.pickFromCamera(),
+          throwsA(isA<PickerBusyException>()),
+        );
 
-      // Attempt multiple simultaneously
-      expect(
-        () => pickPhoto.pickMultiple(),
-        throwsA(isA<PickerBusyException>()),
-      );
+        // Attempt multiple simultaneously
+        expect(
+          () => pickPhoto.pickMultiple(),
+          throwsA(isA<PickerBusyException>()),
+        );
 
-      // Complete first operation
-      completer.complete(null);
-      await firstFuture;
+        // Complete first operation
+        completer.complete(null);
+        await firstFuture;
 
-      expect(pickPhoto.isBusy, isFalse);
+        expect(pickPhoto.isBusy, isFalse);
 
-      // Reset handler and verify next operation succeeds
-      fakeApi.onPickImage = null;
-      final nextPick = await pickPhoto.pickFromGallery();
-      expect(nextPick, isNotNull);
-    });
+        // Reset handler and verify next operation succeeds
+        fakeApi.onPickImage = null;
+        final nextPick = await pickPhoto.pickFromGallery();
+        expect(nextPick, isNotNull);
+      },
+    );
   });
 
   group('Error Mapping', () {
     void setupError(String code, String message) {
-      fakeApi.onPickImage = (_) => throw PlatformException(
-            code: code,
-            message: message,
-          );
+      fakeApi.onPickImage = (_) =>
+          throw PlatformException(code: code, message: message);
     }
 
     test('maps picker_busy to PickerBusyException', () async {
       setupError('picker_busy', 'Busy');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<PickerBusyException>().having((e) => e.code, 'code', 'picker_busy')),
+        throwsA(
+          isA<PickerBusyException>().having(
+            (e) => e.code,
+            'code',
+            'picker_busy',
+          ),
+        ),
       );
     });
 
@@ -283,7 +306,13 @@ void main() {
       setupError('permission_denied', 'No permission');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<PermissionDeniedException>().having((e) => e.code, 'code', 'permission_denied')),
+        throwsA(
+          isA<PermissionDeniedException>().having(
+            (e) => e.code,
+            'code',
+            'permission_denied',
+          ),
+        ),
       );
     });
 
@@ -291,7 +320,13 @@ void main() {
       setupError('camera_unavailable', 'No camera hardware');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<CameraUnavailableException>().having((e) => e.code, 'code', 'camera_unavailable')),
+        throwsA(
+          isA<CameraUnavailableException>().having(
+            (e) => e.code,
+            'code',
+            'camera_unavailable',
+          ),
+        ),
       );
     });
 
@@ -299,7 +334,13 @@ void main() {
       setupError('platform_unavailable', 'Detached activity');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<PlatformUnavailableException>().having((e) => e.code, 'code', 'platform_unavailable')),
+        throwsA(
+          isA<PlatformUnavailableException>().having(
+            (e) => e.code,
+            'code',
+            'platform_unavailable',
+          ),
+        ),
       );
     });
 
@@ -307,7 +348,13 @@ void main() {
       setupError('invalid_options', 'Invalid dimensions');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<InvalidOptionsException>().having((e) => e.code, 'code', 'invalid_options')),
+        throwsA(
+          isA<InvalidOptionsException>().having(
+            (e) => e.code,
+            'code',
+            'invalid_options',
+          ),
+        ),
       );
     });
 
@@ -315,39 +362,75 @@ void main() {
       setupError('unsupported_format', 'Cannot recompress animated GIF');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<UnsupportedFormatException>().having((e) => e.code, 'code', 'unsupported_format')),
+        throwsA(
+          isA<UnsupportedFormatException>().having(
+            (e) => e.code,
+            'code',
+            'unsupported_format',
+          ),
+        ),
       );
     });
 
-    test('maps maximum_size_exceeded to MaximumSizeExceededException', () async {
-      setupError('maximum_size_exceeded', 'Size exceeded limit');
-      expect(
-        () => pickPhoto.pickFromGallery(),
-        throwsA(isA<MaximumSizeExceededException>().having((e) => e.code, 'code', 'maximum_size_exceeded')),
-      );
-    });
+    test(
+      'maps maximum_size_exceeded to MaximumSizeExceededException',
+      () async {
+        setupError('maximum_size_exceeded', 'Size exceeded limit');
+        expect(
+          () => pickPhoto.pickFromGallery(),
+          throwsA(
+            isA<MaximumSizeExceededException>().having(
+              (e) => e.code,
+              'code',
+              'maximum_size_exceeded',
+            ),
+          ),
+        );
+      },
+    );
 
     test('maps file_not_found to FileNotFoundException', () async {
       setupError('file_not_found', 'Missing file');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<FileNotFoundException>().having((e) => e.code, 'code', 'file_not_found')),
+        throwsA(
+          isA<FileNotFoundException>().having(
+            (e) => e.code,
+            'code',
+            'file_not_found',
+          ),
+        ),
       );
     });
 
-    test('maps image_processing_failed to ImageProcessingFailedException', () async {
-      setupError('image_processing_failed', 'Bitmap decode error');
-      expect(
-        () => pickPhoto.pickFromGallery(),
-        throwsA(isA<ImageProcessingFailedException>().having((e) => e.code, 'code', 'image_processing_failed')),
-      );
-    });
+    test(
+      'maps image_processing_failed to ImageProcessingFailedException',
+      () async {
+        setupError('image_processing_failed', 'Bitmap decode error');
+        expect(
+          () => pickPhoto.pickFromGallery(),
+          throwsA(
+            isA<ImageProcessingFailedException>().having(
+              (e) => e.code,
+              'code',
+              'image_processing_failed',
+            ),
+          ),
+        );
+      },
+    );
 
     test('maps file_copy_failed to FileCopyFailedException', () async {
       setupError('file_copy_failed', 'IO Error');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<FileCopyFailedException>().having((e) => e.code, 'code', 'file_copy_failed')),
+        throwsA(
+          isA<FileCopyFailedException>().having(
+            (e) => e.code,
+            'code',
+            'file_copy_failed',
+          ),
+        ),
       );
     });
 
@@ -355,7 +438,13 @@ void main() {
       setupError('insufficient_storage', 'Disk full');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<InsufficientStorageException>().having((e) => e.code, 'code', 'insufficient_storage')),
+        throwsA(
+          isA<InsufficientStorageException>().having(
+            (e) => e.code,
+            'code',
+            'insufficient_storage',
+          ),
+        ),
       );
     });
 
@@ -363,7 +452,13 @@ void main() {
       setupError('unknown_native_error', 'Something crashed');
       expect(
         () => pickPhoto.pickFromGallery(),
-        throwsA(isA<NativePickerFailedException>().having((e) => e.code, 'code', 'native_picker_failed')),
+        throwsA(
+          isA<NativePickerFailedException>().having(
+            (e) => e.code,
+            'code',
+            'native_picker_failed',
+          ),
+        ),
       );
     });
   });

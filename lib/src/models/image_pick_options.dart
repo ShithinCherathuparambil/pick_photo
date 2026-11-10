@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import '../exceptions/pick_photo_exception.dart';
 
 /// Configuration options for picking or capturing an image.
@@ -63,7 +64,9 @@ class ImagePickOptions {
       throw const InvalidOptionsException('maxHeight must be greater than 0.');
     }
     if (maxSizeBytes != null && maxSizeBytes! <= 0) {
-      throw const InvalidOptionsException('maxSizeBytes must be greater than 0.');
+      throw const InvalidOptionsException(
+        'maxSizeBytes must be greater than 0.',
+      );
     }
     if (quality != null && (quality! < 1 || quality! > 100)) {
       throw const InvalidOptionsException(
@@ -84,13 +87,8 @@ class ImagePickOptions {
           preserveOriginal == other.preserveOriginal;
 
   @override
-  int get hashCode => Object.hash(
-        maxWidth,
-        maxHeight,
-        maxSizeBytes,
-        quality,
-        preserveOriginal,
-      );
+  int get hashCode =>
+      Object.hash(maxWidth, maxHeight, maxSizeBytes, quality, preserveOriginal);
 
   @override
   String toString() =>

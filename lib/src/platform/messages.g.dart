@@ -12,9 +12,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-    List<Object?>? replyList,
-    String channelName, {
-    required bool isNullValid,
+  List<Object?>? replyList,
+  String channelName, {
+  required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -48,8 +48,9 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -98,7 +99,6 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
-
 class PickedImageResult {
   PickedImageResult({
     required this.path,
@@ -122,18 +122,12 @@ class PickedImageResult {
   int? height;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      name,
-      mimeType,
-      sizeBytes,
-      width,
-      height,
-    ];
+    return <Object?>[path, name, mimeType, sizeBytes, width, height];
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static PickedImageResult decode(Object result) {
     result as List<Object?>;
@@ -156,7 +150,12 @@ class PickedImageResult {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(path, other.path) && _deepEquals(name, other.name) && _deepEquals(mimeType, other.mimeType) && _deepEquals(sizeBytes, other.sizeBytes) && _deepEquals(width, other.width) && _deepEquals(height, other.height);
+    return _deepEquals(path, other.path) &&
+        _deepEquals(name, other.name) &&
+        _deepEquals(mimeType, other.mimeType) &&
+        _deepEquals(sizeBytes, other.sizeBytes) &&
+        _deepEquals(width, other.width) &&
+        _deepEquals(height, other.height);
   }
 
   @override
@@ -199,7 +198,8 @@ class ImagePickOptionsDto {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static ImagePickOptionsDto decode(Object result) {
     result as List<Object?>;
@@ -221,7 +221,11 @@ class ImagePickOptionsDto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(maxWidth, other.maxWidth) && _deepEquals(maxHeight, other.maxHeight) && _deepEquals(maxSizeBytes, other.maxSizeBytes) && _deepEquals(quality, other.quality) && _deepEquals(preserveOriginal, other.preserveOriginal);
+    return _deepEquals(maxWidth, other.maxWidth) &&
+        _deepEquals(maxHeight, other.maxHeight) &&
+        _deepEquals(maxSizeBytes, other.maxSizeBytes) &&
+        _deepEquals(quality, other.quality) &&
+        _deepEquals(preserveOriginal, other.preserveOriginal);
   }
 
   @override
@@ -268,7 +272,8 @@ class MultiImagePickOptionsDto {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static MultiImagePickOptionsDto decode(Object result) {
     result as List<Object?>;
@@ -285,13 +290,19 @@ class MultiImagePickOptionsDto {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! MultiImagePickOptionsDto || other.runtimeType != runtimeType) {
+    if (other is! MultiImagePickOptionsDto ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(maxCount, other.maxCount) && _deepEquals(maxWidth, other.maxWidth) && _deepEquals(maxHeight, other.maxHeight) && _deepEquals(maxSizeBytes, other.maxSizeBytes) && _deepEquals(quality, other.quality) && _deepEquals(preserveOriginal, other.preserveOriginal);
+    return _deepEquals(maxCount, other.maxCount) &&
+        _deepEquals(maxWidth, other.maxWidth) &&
+        _deepEquals(maxHeight, other.maxHeight) &&
+        _deepEquals(maxSizeBytes, other.maxSizeBytes) &&
+        _deepEquals(quality, other.quality) &&
+        _deepEquals(preserveOriginal, other.preserveOriginal);
   }
 
   @override
@@ -334,7 +345,8 @@ class CameraPickOptionsDto {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static CameraPickOptionsDto decode(Object result) {
     result as List<Object?>;
@@ -356,7 +368,11 @@ class CameraPickOptionsDto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(maxWidth, other.maxWidth) && _deepEquals(maxHeight, other.maxHeight) && _deepEquals(maxSizeBytes, other.maxSizeBytes) && _deepEquals(quality, other.quality) && _deepEquals(preserveOriginal, other.preserveOriginal);
+    return _deepEquals(maxWidth, other.maxWidth) &&
+        _deepEquals(maxHeight, other.maxHeight) &&
+        _deepEquals(maxSizeBytes, other.maxSizeBytes) &&
+        _deepEquals(quality, other.quality) &&
+        _deepEquals(preserveOriginal, other.preserveOriginal);
   }
 
   @override
@@ -369,7 +385,6 @@ class CameraPickOptionsDto {
   }
 }
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -377,16 +392,16 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is PickedImageResult) {
+    } else if (value is PickedImageResult) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is ImagePickOptionsDto) {
+    } else if (value is ImagePickOptionsDto) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is MultiImagePickOptionsDto) {
+    } else if (value is MultiImagePickOptionsDto) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is CameraPickOptionsDto) {
+    } else if (value is CameraPickOptionsDto) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else {
@@ -416,74 +431,83 @@ class PickPhotoHostApi {
   /// available for dependency injection. If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
   PickPhotoHostApi({
-      BinaryMessenger? binaryMessenger, 
-      String messageChannelSuffix = '', 
-      })
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
 
   final BinaryMessenger? pigeonVar_binaryMessenger;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-
   Future<PickedImageResult?> pickImage(ImagePickOptionsDto options) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.pickImage$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.pickImage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
     return pigeonVar_replyValue as PickedImageResult?;
   }
 
-  Future<List<PickedImageResult>> pickMultipleImages(MultiImagePickOptionsDto options) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.pickMultipleImages$pigeonVar_messageChannelSuffix';
+  Future<List<PickedImageResult>> pickMultipleImages(
+    MultiImagePickOptionsDto options,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.pickMultipleImages$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return (pigeonVar_replyValue! as List<Object?>).cast<PickedImageResult>();
   }
 
   Future<PickedImageResult?> captureImage(CameraPickOptionsDto options) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.captureImage$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.captureImage$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
     return pigeonVar_replyValue as PickedImageResult?;
   }
 
   Future<void> clearCache() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.clearCache$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.pick_photo.PickPhotoHostApi.clearCache$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -492,10 +516,9 @@ class PickPhotoHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 }

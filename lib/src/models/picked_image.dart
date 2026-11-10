@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+
 import 'image_source.dart';
 
 /// Represents an image picked from the gallery or captured with the device camera.
@@ -77,15 +78,15 @@ class PickedImage {
 
   @override
   int get hashCode => Object.hash(
-        path,
-        name,
-        mimeType,
-        extension,
-        sizeBytes,
-        width,
-        height,
-        source,
-      );
+    path,
+    name,
+    mimeType,
+    extension,
+    sizeBytes,
+    width,
+    height,
+    source,
+  );
 
   @override
   String toString() =>

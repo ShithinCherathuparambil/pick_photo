@@ -10,3 +10,4 @@ internal class PickPhotoPluginTest {
         assertNotNull(plugin)
     }
 }
+

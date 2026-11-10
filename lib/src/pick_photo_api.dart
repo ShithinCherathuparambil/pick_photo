@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+
 import 'exceptions/pick_photo_exception.dart';
 import 'models/image_pick_options.dart';
 import 'models/image_source.dart';
@@ -10,7 +11,8 @@ class PickPhoto {
   /// Creates a [PickPhoto] instance.
   ///
   /// Optionally accepts a custom [PickPhotoHostApi] for testing and mocking.
-  PickPhoto({PickPhotoHostApi? hostApi}) : _hostApi = hostApi ?? PickPhotoHostApi();
+  PickPhoto({PickPhotoHostApi? hostApi})
+    : _hostApi = hostApi ?? PickPhotoHostApi();
 
   /// The active singleton instance used by static convenience methods.
   static PickPhoto instance = PickPhoto();
