@@ -4,12 +4,12 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'pick_photo'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'A fast, privacy-friendly Flutter image picker plugin.'
   s.description      = <<-DESC
 A fast, privacy-friendly, modern Flutter image picker plugin supporting Photo Picker, PHPicker, and native camera capture.
                        DESC
-  s.homepage         = 'https://github.com/shithin/pick_photo'
+  s.homepage         = 'https://github.com/ShithinCherathuparambil/pick_photo'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Shithin' => 'dev@shithin.com' }
   s.source           = { :path => '.' }

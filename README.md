@@ -1,7 +1,7 @@
 # pick_photo
 
 [![pub package](https://img.shields.io/pub/v/pick_photo.svg)](https://pub.dev/packages/pick_photo)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shithin/pick_photo/blob/main/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/ShithinCherathuparambil/pick_photo/blob/main/LICENSE)
 
 A modern, fast, privacy-friendly, production-ready Flutter photo picker plugin. Built from scratch with native Android Kotlin (AndroidX Photo Picker & Activity Result APIs) and iOS Swift (PhotosUI `PHPickerViewController` & `UIImagePickerController`), communicating over Pigeon-generated type-safe platform channels.
 

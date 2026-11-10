@@ -1,3 +1,9 @@
+## 0.0.2
+
+* Updated verified repository, homepage, and issue tracker URLs to GitHub.
+* Added GitHub Actions CI workflow covering static analysis, unit tests, dry-run publishing, and Android/iOS build checks.
+* Verified live device execution on Android (Photo Picker, Camera, Multi-pick).
+
 ## 0.0.1
 
 * Initial release of `pick_photo`.

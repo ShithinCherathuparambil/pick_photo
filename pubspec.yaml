@@ -1,9 +1,9 @@
 name: pick_photo
 description: "A fast, privacy-friendly, modern Flutter image picker plugin supporting Photo Picker, PHPicker, and native camera capture."
-version: 0.0.1
-homepage: https://github.com/shithin/pick_photo
-repository: https://github.com/shithin/pick_photo
-issue_tracker: https://github.com/shithin/pick_photo/issues
+version: 0.0.2
+homepage: https://github.com/ShithinCherathuparambil/pick_photo
+repository: https://github.com/ShithinCherathuparambil/pick_photo
+issue_tracker: https://github.com/ShithinCherathuparambil/pick_photo/issues
 topics:
   - image-picker
   - photo-picker
