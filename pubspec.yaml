@@ -1,0 +1,35 @@
+name: pick_photo
+description: "A fast, privacy-friendly, modern Flutter image picker plugin supporting Photo Picker, PHPicker, and native camera capture."
+version: 0.0.1
+homepage: https://github.com/shithin/pick_photo
+repository: https://github.com/shithin/pick_photo
+issue_tracker: https://github.com/shithin/pick_photo/issues
+topics:
+  - image-picker
+  - photo-picker
+  - camera
+  - photosui
+  - android-photo-picker
+
+environment:
+  sdk: ^3.13.7
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  pigeon: ^29.2.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.pick_photo
+        pluginClass: PickPhotoPlugin
+      ios:
+        pluginClass: PickPhotoPlugin
