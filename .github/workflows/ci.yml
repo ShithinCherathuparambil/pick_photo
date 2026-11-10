@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze_and_test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze package
+        run: flutter analyze
+
+      - name: Run unit tests
+        run: flutter test --coverage
+
+      - name: Check pub publish dry run
+        run: flutter pub publish --dry-run
+
+      - name: Build example Android debug APK
+        run: |
+          cd example
+          flutter pub get
+          flutter build apk --debug
+
+      - name: Build example iOS simulator app
+        run: |
+          cd example
+          flutter build ios --no-codesign --simulator
